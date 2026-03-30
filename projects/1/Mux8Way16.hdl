@@ -3,7 +3,7 @@
 // by Nisan and Schocken, MIT Press.
 // File name: projects/1/Mux8Way16.hdl
 /**
- * 8-way 16-bit multiplexor:
+ * 8入力16ビットマルチプレクサ:
  * out = a if sel = 000
  *       b if sel = 001
  *       c if sel = 010
@@ -12,6 +12,9 @@
  *       f if sel = 101
  *       g if sel = 110
  *       h if sel = 111
+ *
+ * 実装: Mux4Way16を2つ使い、最後にMux16で選択する。
+ * sel[0..1]で4入力ずつ選択し、sel[2]で最終選択する。
  */
 CHIP Mux8Way16 {
     IN a[16], b[16], c[16], d[16],
@@ -20,7 +23,9 @@ CHIP Mux8Way16 {
     OUT out[16];
 
     PARTS:
+    // 第1段: sel[0..1]でa〜dとe〜hをそれぞれ4入力から選択
     Mux4Way16 (a=a, b=b, c=c, d=d, sel=sel[0..1], out=muxabcd);
     Mux4Way16 (a=e, b=f, c=g, d=h, sel=sel[0..1], out=muxefgh);
+    // 第2段: sel[2]で最終選択
     Mux16 (a=muxabcd, b=muxefgh, sel=sel[2], out=out);
 }

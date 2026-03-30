@@ -2,17 +2,24 @@
 // and the book "The Elements of Computing Systems"
 // by Nisan and Schocken, MIT Press.
 // File name: projects/1/Mux.hdl
-/** 
- * Multiplexor:
+/**
+ * マルチプレクサ（選択器）:
  * if (sel = 0) out = a, else out = b
+ *
+ * 実装: selが0のときaを、selが1のときbを選択して出力する。
+ * out = (a AND NOT(sel)) OR (b AND sel)
  */
 CHIP Mux {
     IN a, b, sel;
     OUT out;
 
     PARTS:
+    // selを反転
     Not (in=sel, out=notSel);
+    // sel=0のとき: aの値を通す
     And (a=a, b=notSel, out=aNotSel);
+    // sel=1のとき: bの値を通す
     And (a=b, b=sel, out=bSel);
+    // どちらかの結果を出力
     Or (a=aNotSel, b=bSel, out=out);
 }

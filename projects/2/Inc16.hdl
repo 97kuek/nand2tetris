@@ -3,13 +3,17 @@
 // by Nisan and Schocken, MIT Press.
 // File name: projects/2/Inc16.hdl
 /**
- * 16-bit incrementer:
+ * 16ビットインクリメンタ:
  * out = in + 1
+ *
+ * 実装: Add16を使い、入力値に定数1（b[0]=true, 残りfalse）を加算する。
+ * 16ビット値のインクリメント（+1）を行う。
  */
 CHIP Inc16 {
     IN in[16];
     OUT out[16];
 
     PARTS:
+    // b=0x0001（最下位ビットのみtrue）を加算して+1を実現
     Add16(a=in, b[0]=true, b[1..15]=false, out=out);
 }

@@ -3,14 +3,19 @@
 // by Nisan and Schocken, MIT Press.
 // File name: projects/2/HalfAdder.hdl
 /**
- * Computes the sum of two bits.
+ * 半加算器:
+ * 2つの1ビット入力の加算を行う。
+ * sum = a XOR b（加算結果の下位ビット）
+ * carry = a AND b（繰り上がり）
  */
 CHIP HalfAdder {
-    IN a, b;    // 1-bit inputs
-    OUT sum,    // Right bit of a + b 
-        carry;  // Left bit of a + b
+    IN a, b;    // 1ビット入力
+    OUT sum,    // a + b の下位ビット（合計）
+        carry;  // a + b の上位ビット（繰り上がり）
 
     PARTS:
+    // XorでSum（排他的論理和 = 桁上がりなしの加算）を計算
     Xor (a=a, b=b, out=sum);
+    // Andで繰り上がり（両方1のときのみ繰り上がり発生）を計算
     And (a=a, b=b, out=carry);
 }

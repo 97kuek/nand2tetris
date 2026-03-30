@@ -3,17 +3,24 @@
 // by Nisan and Schocken, MIT Press.
 // File name: projects/3/b/RAM512.hdl
 /**
- * Memory of 512 16-bit registers.
- * If load is asserted, the value of the register selected by
- * address is set to in; Otherwise, the value does not change.
- * The value of the selected register is emitted by out.
+ * 512ワードRAM（各16ビット）:
+ * loadが1のとき、addressで指定されたレジスタにinの値を書き込む。
+ * loadが0のとき、値は変更されない。
+ * addressで指定されたレジスタの値が常にoutに出力される。
+ *
+ * 実装: 9ビットアドレスを上位3ビット(address[6..8])と
+ * 下位6ビット(address[0..5])に分割。
+ * 上位3ビットで8つのRAM64から1つを選択し、
+ * 下位6ビットでRAM64内のレジスタを指定する。
  */
 CHIP RAM512 {
     IN in[16], load, address[9];
     OUT out[16];
 
     PARTS:
+    // 上位3ビットでload信号を8つのRAM64に分配
     DMux8Way(in=load, sel=address[6..8], a=la, b=lb, c=lc, d=ld, e=le, f=lf, g=lg, h=lh);
+    // 8つのRAM64（各RAM64は下位6ビットで内部アドレスを指定）
     RAM64(in=in, load=la, address=address[0..5], out=oa);
     RAM64(in=in, load=lb, address=address[0..5], out=ob);
     RAM64(in=in, load=lc, address=address[0..5], out=oc);
@@ -22,5 +29,6 @@ CHIP RAM512 {
     RAM64(in=in, load=lf, address=address[0..5], out=of);
     RAM64(in=in, load=lg, address=address[0..5], out=og);
     RAM64(in=in, load=lh, address=address[0..5], out=oh);
+    // 上位3ビットで対象RAM64の出力を選択
     Mux8Way16(a=oa, b=ob, c=oc, d=od, e=oe, f=of, g=og, h=oh, sel=address[6..8], out=out);
 }

@@ -3,15 +3,19 @@
 // by Nisan and Schocken, MIT Press.
 // File name: projects/1/Mux16.hdl
 /**
- * 16-bit multiplexor: 
+ * 16ビットマルチプレクサ:
  * for i = 0, ..., 15:
  * if (sel = 0) out[i] = a[i], else out[i] = b[i]
+ *
+ * 実装: 16ビットの各ビットにMuxゲートを適用する。
+ * selの値に応じて、aまたはbの各ビットを選択する。
  */
 CHIP Mux16 {
     IN a[16], b[16], sel;
     OUT out[16];
 
     PARTS:
+    // 各ビットごとにsel信号で選択（ビット0〜15）
     Mux (a=a[0], b=b[0], sel=sel, out=out[0]);
     Mux (a=a[1], b=b[1], sel=sel, out=out[1]);
     Mux (a=a[2], b=b[2], sel=sel, out=out[2]);

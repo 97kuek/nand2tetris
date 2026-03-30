@@ -3,15 +3,20 @@
 // by Nisan and Schocken, MIT Press.
 // File name: projects/2/FullAdder.hdl
 /**
- * Computes the sum of three bits.
+ * 全加算器:
+ * 3つの1ビット入力（a, b, 繰り上がり入力c）の加算を行う。
+ * 半加算器2つとOrゲートで構成される。
  */
 CHIP FullAdder {
-    IN a, b, c;  // 1-bit inputs
-    OUT sum,     // Right bit of a + b + c
-        carry;   // Left bit of a + b + c
+    IN a, b, c;  // 1ビット入力（cは下位桁からの繰り上がり）
+    OUT sum,     // a + b + c の下位ビット（合計）
+        carry;   // a + b + c の上位ビット（繰り上がり）
 
     PARTS:
+    // 第1段: aとbを半加算器で加算
     HalfAdder (a=a, b=b, sum=s1, carry=c1);
+    // 第2段: 第1段の合計と繰り上がり入力cを半加算器で加算
     HalfAdder (a=s1, b=c, sum=sum, carry=c2);
+    // どちらかの段で繰り上がりが発生すれば最終繰り上がりとする
     Or (a=c1, b=c2, out=carry);
 }

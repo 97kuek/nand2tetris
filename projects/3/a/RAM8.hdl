@@ -3,17 +3,22 @@
 // by Nisan and Schocken, MIT Press.
 // File name: projects/3/a/RAM8.hdl
 /**
- * Memory of eight 16-bit registers.
- * If load is asserted, the value of the register selected by
- * address is set to in; Otherwise, the value does not change.
- * The value of the selected register is emitted by out.
+ * 8ワードRAM（各16ビット）:
+ * loadが1のとき、addressで指定されたレジスタにinの値を書き込む。
+ * loadが0のとき、値は変更されない。
+ * addressで指定されたレジスタの値が常にoutに出力される。
+ *
+ * 実装: DMux8Wayでload信号を8つのレジスタに振り分け、
+ * Mux8Way16で指定アドレスのレジスタ出力を選択する。
  */
 CHIP RAM8 {
     IN in[16], load, address[3];
     OUT out[16];
 
     PARTS:
+    // load信号をアドレスに基づいて8つのレジスタに分配
     DMux8Way(in=load, sel=address, a=la, b=lb, c=lc, d=ld, e=le, f=lf, g=lg, h=lh);
+    // 8つの16ビットレジスタ（各レジスタは対応するload信号で制御）
     Register(in=in, load=la, out=oa);
     Register(in=in, load=lb, out=ob);
     Register(in=in, load=lc, out=oc);
@@ -22,5 +27,6 @@ CHIP RAM8 {
     Register(in=in, load=lf, out=of);
     Register(in=in, load=lg, out=og);
     Register(in=in, load=lh, out=oh);
+    // アドレスに基づいて対象レジスタの出力を選択
     Mux8Way16(a=oa, b=ob, c=oc, d=od, e=oe, f=of, g=og, h=oh, sel=address, out=out);
 }

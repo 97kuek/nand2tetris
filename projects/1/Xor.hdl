@@ -3,17 +3,24 @@
 // by Nisan and Schocken, MIT Press.
 // File name: projects/1/Xor.hdl
 /**
- * Exclusive-or gate:
+ * Xorゲート（排他的論理和）:
  * if ((a and Not(b)) or (Not(a) and b)) out = 1, else out = 0
+ *
+ * 実装: 「aが1でbが0」または「aが0でbが1」のときだけ出力が1。
+ * 2つの入力が異なるときに1を出力する。
  */
 CHIP Xor {
     IN a, b;
     OUT out;
 
     PARTS:
+    // 各入力を反転
     Not (in=a, out=nota);
     Not (in=b, out=notb);
+    // aが1かつbが0のケース
     And (a=a, b=notb, out=w1);
+    // aが0かつbが1のケース
     And (a=nota, b=b, out=w2);
+    // どちらかのケースが成立すれば出力1
     Or (a=w1, b=w2, out=out);
 }

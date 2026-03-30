@@ -3,14 +3,19 @@
 // by Nisan and Schocken, MIT Press.
 // File name: projects/1/And.hdl
 /**
- * And gate:
- * if (a and b) out = 1, else out = 0 
+ * Andゲート（論理積）:
+ * if (a and b) out = 1, else out = 0
+ *
+ * 実装: Nandの出力をNotで反転する。
+ * And(a, b) = Not(Nand(a, b))
  */
 CHIP And {
     IN a, b;
     OUT out;
     
     PARTS:
+    // まずNandで論理積の否定を計算
     Nand (a=a, b=b, out=nandOut);
+    // Notで反転してAndを実現
     Not (in=nandOut, out=out);
 }

@@ -3,16 +3,22 @@
 // by Nisan and Schocken, MIT Press.
 // File name: projects/1/DMux.hdl
 /**
- * Demultiplexor:
+ * デマルチプレクサ（分配器）:
  * [a, b] = [in, 0] if sel = 0
  *          [0, in] if sel = 1
+ *
+ * 実装: selの値に応じて、入力信号をa側またはb側に振り分ける。
+ * マルチプレクサの逆の動作。
  */
 CHIP DMux {
     IN in, sel;
     OUT a, b;
 
     PARTS:
+    // selを反転
     Not (in=sel, out=notSel);
+    // sel=0のとき: 入力をaに出力
     And (a=in, b=notSel, out=a);
+    // sel=1のとき: 入力をbに出力
     And (a=in, b=sel, out=b);
 }

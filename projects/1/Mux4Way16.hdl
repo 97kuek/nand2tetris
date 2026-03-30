@@ -3,18 +3,23 @@
 // by Nisan and Schocken, MIT Press.
 // File name: projects/1/Mux4Way16.hdl
 /**
- * 4-way 16-bit multiplexor:
+ * 4入力16ビットマルチプレクサ:
  * out = a if sel = 00
  *       b if sel = 01
  *       c if sel = 10
  *       d if sel = 11
+ *
+ * 実装: 2段階のMux16でツリー状に選択する。
+ * sel[0]で各ペア内の選択、sel[1]でペア間の選択を行う。
  */
 CHIP Mux4Way16 {
     IN a[16], b[16], c[16], d[16], sel[2];
     OUT out[16];
     
     PARTS:
+    // 第1段: sel[0]でa/bのペア、c/dのペアをそれぞれ選択
     Mux16 (a=a, b=b, sel=sel[0], out=muxab);
     Mux16 (a=c, b=d, sel=sel[0], out=muxcd);
+    // 第2段: sel[1]で第1段の結果から最終選択
     Mux16 (a=muxab, b=muxcd, sel=sel[1], out=out);
 }

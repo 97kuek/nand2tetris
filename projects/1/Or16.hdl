@@ -3,15 +3,19 @@
 // by Nisan and Schocken, MIT Press.
 // File name: projects/1/Or16.hdl
 /**
- * 16-bit Or gate:
+ * 16ビットOrゲート:
  * for i = 0, ..., 15:
- * out[i] = a[i] Or b[i] 
+ * out[i] = a[i] Or b[i]
+ *
+ * 実装: 16ビットの各ビットにOrゲートを適用する。
+ * 対応するビットごとに論理和を計算する。
  */
 CHIP Or16 {
     IN a[16], b[16];
     OUT out[16];
 
     PARTS:
+    // 対応するビットごとにOr演算（ビット0〜15）
     Or (a=a[0], b=b[0], out=out[0]);
     Or (a=a[1], b=b[1], out=out[1]);
     Or (a=a[2], b=b[2], out=out[2]);

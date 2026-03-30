@@ -3,15 +3,19 @@
 // by Nisan and Schocken, MIT Press.
 // File name: projects/1/And16.hdl
 /**
- * 16-bit And gate:
+ * 16ビットAndゲート:
  * for i = 0, ..., 15:
- * out[i] = a[i] And b[i] 
+ * out[i] = a[i] And b[i]
+ *
+ * 実装: 16ビットの各ビットにAndゲートを適用する。
+ * 対応するビットごとに論理積を計算する。
  */
 CHIP And16 {
     IN a[16], b[16];
     OUT out[16];
 
     PARTS:
+    // 対応するビットごとにAnd演算（ビット0〜15）
     And (a=a[0], b=b[0], out=out[0]);
     And (a=a[1], b=b[1], out=out[1]);
     And (a=a[2], b=b[2], out=out[2]);

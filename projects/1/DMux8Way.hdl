@@ -3,7 +3,7 @@
 // by Nisan and Schocken, MIT Press.
 // File name: projects/1/DMux8Way.hdl
 /**
- * 8-way demultiplexor:
+ * 8出力デマルチプレクサ:
  * [a, b, c, d, e, f, g, h] = [in, 0,  0,  0,  0,  0,  0,  0] if sel = 000
  *                            [0, in,  0,  0,  0,  0,  0,  0] if sel = 001
  *                            [0,  0, in,  0,  0,  0,  0,  0] if sel = 010
@@ -12,13 +12,18 @@
  *                            [0,  0,  0,  0,  0, in,  0,  0] if sel = 101
  *                            [0,  0,  0,  0,  0,  0, in,  0] if sel = 110
  *                            [0,  0,  0,  0,  0,  0,  0, in] if sel = 111
+ *
+ * 実装: DMuxとDMux4Wayでツリー状に分配する。
+ * sel[2]で上位/下位の4グループに分け、sel[0..1]で4出力から選択する。
  */
 CHIP DMux8Way {
     IN in, sel[3];
     OUT a, b, c, d, e, f, g, h;
 
     PARTS:
+    // 第1段: sel[2]で上位グループ(a〜d)と下位グループ(e〜h)に分配
     DMux (in=in, sel=sel[2], a=abcd, b=efgh);
+    // 第2段: sel[0..1]で各グループ内の4出力から最終出力先を決定
     DMux4Way (in=abcd, sel=sel[0..1], a=a, b=b, c=c, d=d);
     DMux4Way (in=efgh, sel=sel[0..1], a=e, b=f, c=g, d=h);
 }

@@ -3,13 +3,17 @@
 // by Nisan and Schocken, MIT Press.
 // File name: projects/1/Not.hdl
 /**
- * Not gate:
+ * Notゲート（否定）:
  * if (in) out = 0, else out = 1
+ *
+ * 実装: Nandゲートの2つの入力に同じ信号を接続する。
+ * Nand(a, a) = Not(a) となる（ド・モルガンの法則）。
  */
 CHIP Not {
     IN in;
     OUT out;
 
     PARTS:
+    // Nandの両方の入力にinを接続 → Not(in) を実現
     Nand (a=in, b=in, out=out);
 }

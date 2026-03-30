@@ -3,15 +3,19 @@
 // by Nisan and Schocken, MIT Press.
 // File name: projects/1/Not16.hdl
 /**
- * 16-bit Not gate:
+ * 16ビットNotゲート:
  * for i = 0, ..., 15:
  * out[i] = Not(a[i])
+ *
+ * 実装: 16ビットの各ビットにNotゲートを適用する。
+ * 各ビットを個別に反転する。
  */
 CHIP Not16 {
     IN in[16];
     OUT out[16];
 
     PARTS:
+    // 各ビットを個別に反転（ビット0〜15）
     Not (in=in[0], out=out[0]);
     Not (in=in[1], out=out[1]);
     Not (in=in[2], out=out[2]);

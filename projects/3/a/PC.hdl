@@ -3,25 +3,30 @@
 // by Nisan and Schocken, MIT Press.
 // File name: projects/3/a/PC.hdl
 /**
- * A 16-bit counter.
- * if      reset(t): out(t+1) = 0
- * else if load(t):  out(t+1) = in(t)
- * else if inc(t):   out(t+1) = out(t) + 1
- * else              out(t+1) = out(t)
+ * 16ビットプログラムカウンタ:
+ * 優先順位: reset > load > inc
+ * if      reset(t): out(t+1) = 0       （リセット: 0に戻す）
+ * else if load(t):  out(t+1) = in(t)   （ロード: 入力値をセット）
+ * else if inc(t):   out(t+1) = out(t) + 1  （インクリメント: +1）
+ * else              out(t+1) = out(t)  （保持: 現在の値を維持）
+ *
+ * 実装: 優先順位の低い操作から順にMux16で選択を行う。
+ * 後段のMux16が前段の結果を上書きするため、優先順位が自然に実現される。
+ * Registerは常にload=trueで毎クロック書き込む。
  */
 CHIP PC {
     IN in[16],inc, load, reset;
     OUT out[16];
     
     PARTS:
-    // Step 1: Increment current value
+    // ステップ1: 現在の値をインクリメント
     Inc16(in=regout, out=incout);
-    // Step 2: inc select - current value or incremented value
+    // ステップ2: inc選択 - 現在の値かインクリメント後の値か
     Mux16(a=regout, b=incout, sel=inc, out=w1);
-    // Step 3: load select - step2 result or input value
+    // ステップ3: load選択 - ステップ2の結果か入力値か
     Mux16(a=w1, b=in, sel=load, out=w2);
-    // Step 4: reset select - step3 result or zero
+    // ステップ4: reset選択 - ステップ3の結果かゼロか
     Mux16(a=w2, b=false, sel=reset, out=w3);
-    // Step 5: Always write to register
+    // ステップ5: レジスタに常に書き込み（load=true固定）
     Register(in=w3, load=true, out=regout, out=out);
 }

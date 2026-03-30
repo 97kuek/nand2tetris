@@ -3,15 +3,20 @@
 // by Nisan and Schocken, MIT Press.
 // File name: projects/1/Or.hdl
 /**
- * Or gate:
- * if (a or b) out = 1, else out = 0 
+ * Orゲート（論理和）:
+ * if (a or b) out = 1, else out = 0
+ *
+ * 実装: ド・モルガンの法則を利用。
+ * Or(a, b) = Not(And(Not(a), Not(b))) = Nand(Not(a), Not(b))
  */
 CHIP Or {
     IN a, b;
     OUT out;
 
     PARTS:
+    // 各入力を反転
     Not (in=a, out=notA);
     Not (in=b, out=notB);
+    // 反転した値のNandでOrを実現（ド・モルガンの法則）
     Nand (a=notA, b=notB, out=out);
 }
