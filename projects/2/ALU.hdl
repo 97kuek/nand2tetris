@@ -41,5 +41,33 @@ CHIP ALU {
         ng;      // if (out < 0)  equals 1, else 0
 
     PARTS:
-    //// Replace this comment with your code.
+    // zx: if (zx == 1) set x = 0
+    Mux16(a=x, b=false, sel=zx, out=x1);
+
+    // nx: if (nx == 1) set x = !x
+    Not16(in=x1, out=negx1);
+    Mux16(a=x1, b=negx1, sel=nx, out=x2);
+
+    // zy: if (zy == 1) set y = 0
+    Mux16(a=y, b=false, sel=zy, out=y1);
+
+    // ny: if (ny == 1) set y = !y
+    Not16(in=y1, out=negy1);
+    Mux16(a=y1, b=negy1, sel=ny, out=y2);
+
+    // f: if (f == 1) set out = x + y else set out = x & y
+    Add16(a=x2, b=y2, out=addxy);
+    And16(a=x2, b=y2, out=andxy);
+    Mux16(a=andxy, b=addxy, sel=f, out=fxy);
+
+    // no: if (no == 1) set out = !out
+    // Also handle ng (MSB) and split output for zr check
+    Not16(in=fxy, out=negfxy);
+    Mux16(a=fxy, b=negfxy, sel=no, out=out, out[15]=ng, out[0..7]=low, out[8..15]=high);
+
+    // zr: if (out == 0) zr = 1
+    Or8Way(in=low, out=or1);
+    Or8Way(in=high, out=or2);
+    Or(a=or1, b=or2, out=notzr);
+    Not(in=notzr, out=zr);
 }

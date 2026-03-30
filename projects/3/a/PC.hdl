@@ -14,5 +14,14 @@ CHIP PC {
     OUT out[16];
     
     PARTS:
-    //// Replace this comment with your code.
+    // Step 1: Increment current value
+    Inc16(in=regout, out=incout);
+    // Step 2: inc select - current value or incremented value
+    Mux16(a=regout, b=incout, sel=inc, out=w1);
+    // Step 3: load select - step2 result or input value
+    Mux16(a=w1, b=in, sel=load, out=w2);
+    // Step 4: reset select - step3 result or zero
+    Mux16(a=w2, b=false, sel=reset, out=w3);
+    // Step 5: Always write to register
+    Register(in=w3, load=true, out=regout, out=out);
 }
